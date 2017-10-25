@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/modeloSistema.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuPrincipal.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="frmCliListagem">
+			<p:dataTable id="tblGeneros" widgetVar="tabelaGeneros"
+			emptyMessage="Nenhum registro encontrado."
+				value="#{MBGeneros.itens}" var="item" 
+				filteredValue="#{MBGeneros.itensFiltrados}"
+				paginator="true" rows="11">
+
+				<f:facet name="header">
+           Generos - Listagem
+              </f:facet>
+
+				<p:column headerText="Código" style="width: 3%; " sortBy="#{item.id_genero}"
+					>
+					<h:outputText value="#{item.id_genero}" />
+				</p:column>
+
+				<p:column headerText="Descrição"  sortBy="#{item.descricao}" filterBy="#{item.descricao}">
+					<h:outputText value="#{item.descricao}" />
+					</p:column>
+				 
+						 
+				
+				 
+				<p:column headerText="Opções" style="width: 10%; " >
+				
+					
+				<p:commandButton icon="ui-icon-pencil" style="width: 40%; "
+					oncomplete="PF('dlgCliEditar').show();"
+					update=":frmCliEditar:pnlCliEditar">
+					<f:setPropertyActionListener target="#{MBGeneros.generos}" value="#{item}" />
+					</p:commandButton>
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Novo" actionListener="#{MBGeneros.prepararNovo}"
+									 oncomplete="PF('dlgCliNovo').show();" 
+									 update=":frmCliNovo:pnlCliNovo"/>
+				</f:facet>
+				
+				
+			
+			
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog widgetVar="dlgCliNovo" closable="false" draggable="false"
+			resizable="false"
+			modal="true" appendTo="@(body)"
+			header="Generos - Novo">
+			<h:form id="frmCliNovo">
+				<h:panelGrid id="pnlCliNovo" columns="2">
+									
+			<p:outputLabel for="descricao" value="Descricao:" />
+			<p:inputText id="descricao" size="20" maxlength="80" value="#{MBGeneros.generos.descricao}" 
+			required="true" requiredMessage="O Campo descricao é obrigatorio"/>
+			
+							
+					
+								
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Gravar" actionListener="#{MBGeneros.novo}" 
+					oncomplete="verificar(xhr, status, args, 'dlgCliNovo', 'tabelaGeneros'); "
+						update=":frmCliListagem:tblGeneros :msgGlobal" />
+					<p:commandButton value="Cancelar" onclick="PF('dlgCliNovo').hide();" process="@this"  />
+					
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+				
+		
+			
+		<p:dialog widgetVar="dlgCliEditar" closable="false"
+		draggable="false" resizable="false" 
+		modal="true" appendTo="@(body)"
+		header="Generos - Editar">
+		<h:form id="frmCliEditar">
+		<h:panelGrid id="pnlCliEditar" columns="2">
+		<p:outputLabel value="Código" />
+		<h:outputText value="#{MBGeneros.generos.id_genero}"/>
+		
+		<p:outputLabel for="descricao" value="Descricao:" />
+			<p:inputText id="descricao" size="20" maxlength="80" value="#{MBGeneros.generos.descricao}" 
+			required="true" requiredMessage="O Campo descricao é obrigatorio"/>
+			
+			
+		
+		</h:panelGrid>
+		<h:panelGrid columns="2">
+		<p:commandButton value="Editar" actionListener="#{MBGeneros.editar}"
+		oncomplete="verificar(xhr, status, args, 'dlgCliEditar', 'tabelaGeneros'); "
+						update=":frmCliListagem:tblGeneros :msgGlobal" />
+		<p:commandButton value="Cancelar" onclick="PF('dlgCliEditar').hide();" process="@this"  />
+		</h:panelGrid>
+		</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

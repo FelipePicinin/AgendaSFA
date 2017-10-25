@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:form>
+		<p:menubar>
+			<p:submenu label="Arquivo">
+				<p:menuitem value="Sair" />
+			</p:submenu>
+
+			<p:submenu label="Cadastros">
+
+				<p:menuitem value="Generos" outcome="/pages/Generos.xhtml" />
+				<p:menuitem value="Status" outcome="/pages/Status.xhtml" />
+				<p:menuitem value="Animes" outcome="/pages/Animes.xhtml" />
+				<p:menuitem value="Series" outcome="/pages/Series.xhtml" />
+				<p:menuitem value="Filmes" outcome="/pages/Filmes.xhtml" />
+
+
+
+			</p:submenu>
+
+
+			<p:submenu label="Em andamentos">
+
+				<p:menuitem value="Series Assistindo"
+					outcome="/pages/Anseries.xhtml" />
+				<p:menuitem value="Animes Assistindo"
+					outcome="/pages/Ananimes.xhtml" />
+
+			</p:submenu>
+
+
+			<p:submenu label="Tela Principal">
+
+				<p:menuitem value="Tela Principal" outcome="/pages/principal.xhtml" />
+
+			</p:submenu>
+
+
+		<p:submenu label="Relatorios">
+
+				<p:menuitem value="Relatorios de Series" outcome="/pages/principal.xhtml" />
+
+			</p:submenu>
+
+		</p:menubar>
+	</h:form>
+</ui:composition>

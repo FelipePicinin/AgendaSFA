@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/modeloSistema.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuPrincipal.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<f:event listener="#{MBAnimes.carregarListagem}" type="preRenderView" />
+		
+		<h:form id="frmIveListagem">
+			<p:dataTable id="tblIveListagem" widgetVar="tabelaIveListagem" value="#{MBAnimes.itens}"
+				var="item" emptyMessage="Nenhum registro encontrado. "
+				paginator="true" rows="8"
+				filteredValue="#{MBAnimes.itensFiltrados}">
+				<f:facet name="header">
+					<h:outputText value="Animes- Listagem" />
+				</f:facet>
+
+				<p:column headerText="Código" filterBy="#{item.id_anime}"
+					sortBy="#{item.id_anime}">
+					<h:outputText value="#{item.id_anime}" />
+				</p:column>
+				
+				<p:column headerText="Generos" filterBy="#{item.generos.descricao}"
+					sortBy="#{item.generos.descricao}">
+					<h:outputText value="#{item.generos.descricao}" />
+				</p:column>
+				
+				<p:column headerText="Status" filterBy="#{item.status.descricao}"
+					sortBy="#{item.status.descricao}">
+					<h:outputText value="#{item.status.descricao}" />
+				</p:column>
+				
+				<p:column headerText="Nome"  sortBy="#{item.nome}" filterBy="#{item.nome}">
+					<h:outputText value="#{item.nome}" />
+					</p:column>
+				
+				<p:column headerText="Temporada" filterBy="#{item.temporada}"
+					sortBy="#{item.temporada}">
+					<h:outputText value="#{item.temporada}" />
+				</p:column>
+				
+				<p:column headerText="Episodios"  sortBy="#{item.episodio}" filterBy="#{item.episodio}">
+					<h:outputText value="#{item.episodio}" />
+					</p:column>
+				
+				<p:column headerText="Data Lançamento" filterBy="#{item.ano_lan}"
+					sortBy="#{item.ano_lan}">
+					<h:outputText value="#{item.ano_lan}" />
+				</p:column>
+				
+					
+				
+				
+				<p:column headerText="Opções" >
+				<p:commandButton icon="ui-icon-trash" oncomplete="PF('dlgIveExcluir').show();"
+				update=":frmIveExcluir:pnlIveExcluir" >
+				<f:setPropertyActionListener target="#{MBAnimes.animes}" value="#{item}" />
+				</p:commandButton>
+				
+				<p:commandButton icon="ui-icon-pencil" actionListener="#{MBAnimes.prepararEditar}" oncomplete="PF('dlgIveEditar').show();"
+				update=":frmIveEditar:pnlIveEditar" >
+				<f:setPropertyActionListener target="#{MBAnimes.animes}" value="#{item}" />
+				</p:commandButton>
+				</p:column>
+				
+				<f:facet name="footer">
+				<p:commandButton value="Novo" oncomplete="PF('dlgIveNovo').show();" 
+				actionListener="#{MBAnimes.prepararNovo}"
+				update=":frmIveNovo:pnlIveNovo :msgGlobal"/>
+				</f:facet>
+				
+				
+				<f:facet name="footer">
+					<p:button value="Cad Status" icon="ui-icon-arrowreturnthick-1-w"
+						outcome="/pages/Status.xhtml">
+					</p:button>
+				</f:facet>
+				
+				<f:facet name="footer">
+					<p:button value="Cad Generos" icon="ui-icon-arrowreturnthick-1-w"
+						outcome="/pages/Generos.xhtml">
+					</p:button>
+				</f:facet>
+				
+				
+				
+			</p:dataTable>
+
+		</h:form>
+		
+		
+		<p:dialog widgetVar="dlgIveNovo" closable="false" draggable="false"
+			resizable="false" header="Animes - Novo">
+		<h:form id="frmIveNovo">
+		<h:panelGrid id="pnlIveNovo" columns="2">
+		
+		
+		
+		<p:outputLabel value="Generos:" />
+		<p:selectOneMenu value="#{MBAnimes.animes.generos.id_genero}" filter="true">
+		<f:selectItem itemValue="" itemLabel="Selecione um Genero"/>
+		<f:selectItems value="#{MBAnimes.comboGeneros}" var="item"
+		itemValue="#{item.id_genero}" itemLabel="#{item.descricao}" />
+		</p:selectOneMenu>
+		
+			<p:outputLabel value="Status:" />
+		<p:selectOneMenu value="#{MBAnimes.animes.status.id_status}" filter="true">
+		<f:selectItem itemValue="" itemLabel="Selecione um status"/>
+		<f:selectItems value="#{MBAnimes.comboStatus}" var="item"
+		itemValue="#{item.id_status}" itemLabel="#{item.descricao}" />
+		</p:selectOneMenu>
+		
+				
+		<p:outputLabel for="nome" value="Nome:" />
+			<p:inputText id="nome" size="30" maxlength="80" value="#{MBAnimes.animes.nome}" 
+			required="true" requiredMessage="O Campo nome é obrigatorio"/>	
+			
+			<p:outputLabel for="temporada" value="Temporada:" />
+			<p:inputText id="temporada" size="15" maxlength="80" value="#{MBAnimes.animes.temporada}" 
+			/>	
+			
+			<p:outputLabel for="episodio" value="Episodio:" />
+					<p:inputText id="episodio" size="15" maxlength="15" value="#{MBAnimes.animes.episodio}"
+					required="true" requiredMessage="O campo Episodio é obrigatório"  />
+		
+		<p:outputLabel for="txtCliDataConsulta" value="Data Lançamento: " />
+				<p:calendar id="txtCliDataConsulta"
+				 value="#{MBAnimes.animes.ano_lan}"
+					mask="99/99/9999" mode="popup" 
+					required="true" requiredMessage="O campo Data da Consulta é obrigatório" />	
+				
+					
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2">
+		<p:commandButton value="gravar" actionListener="#{MBAnimes.novo}" 
+		update=":msgGlobal :frmIveListagem:tblIveListagem" oncomplete="PF('dlgIveNovo').hide(); " />
+		<p:commandButton value="cancelar" oncomplete="PF('dlgIveNovo').hide();"/>
+		</h:panelGrid>
+		</h:form>
+		</p:dialog>
+		
+		<p:dialog widgetVar="dlgIveExcluir" closable="false" draggable="false"
+			resizable="false" header="Animes - Excluir">
+			
+			<h:form id="frmIveExcluir">
+		<h:panelGrid id="pnlIveExcluir" columns="2">
+		
+		<p:outputLabel value="Código:" />
+		<h:outputText value="#{MBAnimes.animes.id_anime}" />
+		
+		
+		</h:panelGrid>
+		
+		<h:panelGrid columns="2">
+		<p:commandButton value="Excluir" actionListener="#{MBAnime.excluir}"
+		update=":frmIveListagem:tblIveListagem  :msgGlobal"
+		oncomplete="PF('dlgIveExcluir').hide();" />
+		<p:commandButton value="Cancelar" oncomplete="PF('dlgIveExcluir').hide();" />
+		
+		</h:panelGrid>
+		
+		</h:form>
+		
+		</p:dialog>
+		
+		<p:dialog widgetVar="dlgIveEditar" closable="false" draggable="false" resizable="false"
+		header="Animes- Editar">
+		<h:form id="frmIveEditar">
+		<h:panelGrid id="pnlIveEditar" columns="2">
+			<p:outputLabel value="Código:" />
+		<h:outputText value="#{MBAnimes.animes.id_anime}" />
+		
+		<p:outputLabel value="Generos:" />
+		<p:selectOneMenu value="#{MBAnimes.animes.generos.id_genero}" filter="true">
+		<f:selectItem itemValue="" itemLabel="Selecione um Genero"/>
+		<f:selectItems value="#{MBAnimes.comboGeneros}" var="item"
+		itemValue="#{item.id_genero}" itemLabel="#{item.descricao}" />
+		</p:selectOneMenu>
+		
+			<p:outputLabel value="Status:" />
+		<p:selectOneMenu value="#{MBAnimes.animes.status.id_status}" filter="true">
+		<f:selectItem itemValue="" itemLabel="Selecione um status"/>
+		<f:selectItems value="#{MBAnimes.comboStatus}" var="item"
+		itemValue="#{item.id_status}" itemLabel="#{item.descricao}" />
+		</p:selectOneMenu>
+		
+				
+		<p:outputLabel for="nome" value="Nome:" />
+			<p:inputText id="nome" size="30" maxlength="80" value="#{MBAnimes.animes.nome}" 
+			required="true" requiredMessage="O Campo nome é obrigatorio"/>	
+			
+			<p:outputLabel for="temporada" value="Temporada:" />
+			<p:inputText id="temporada" size="15" maxlength="80" value="#{MBAnimes.animes.temporada}" 
+			/>	
+			
+			<p:outputLabel for="episodio" value="Episodio:" />
+					<p:inputText id="episodio" size="15" maxlength="15" value="#{MBAnimes.animes.episodio}"
+					required="true" requiredMessage="O campo Episodio é obrigatório"  />
+		
+		<p:outputLabel for="txtCliDataConsulta" value="Data Lançamento: " />
+				<p:calendar id="txtCliDataConsulta"
+				 value="#{MBAnimes.animes.ano_lan}"
+					mask="99/99/9999" mode="popup" 
+					required="true" requiredMessage="O campo Data da Consulta é obrigatório" />	
+					
+					</h:panelGrid>
+		
+		<h:panelGrid columns="2">
+		<p:commandButton value="Editar" actionListener="#{MBAnimes.editar}" 
+		update=":frmIveListagem:tblIveListagem :msgGlobal"
+		oncomplete="PF('dlgIveEditar').hide();" />
+		
+		<p:commandButton value="Cancelar" oncomplete="PF('dlgIveEditar').hide();"/>
+		</h:panelGrid>
+		</h:form>
+		
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>
+		

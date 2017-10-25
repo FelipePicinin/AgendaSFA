@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+	<session-factory>
+
+		<!-- Configurações da conexão -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://localhost:3306/bancosf</property>
+		<property name="connection.username">root</property>
+		<property name="connection.password">vania10</property>
+
+		<!-- Pool de conexões JDBC -->
+		<property name="connection.pool_size">1</property>
+
+		<!-- SQL dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+
+		<!-- Gerenciamento da sessão -->
+		<property name="current_session_context_class">thread</property>
+
+		<!-- Desabilita a cache -->
+		<property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+
+		<!-- Exibir os comandos SQL -->
+		<property name="show_sql">true</property>
+
+		<!-- Cria das tabelas -->
+		<property name="hbm2ddl.auto">update</property>
+
+		 <mapping class="br.com.AgendaSFA.domain.Generos" />  
+		 <mapping class="br.com.AgendaSFA.domain.Status" /> 
+		 <mapping class="br.com.AgendaSFA.domain.Animes" />
+		 <mapping class="br.com.AgendaSFA.domain.Series" />
+		 <mapping class="br.com.AgendaSFA.domain.Filmes" />
+		 <mapping class="br.com.AgendaSFA.domain.Anseries" />
+		  <mapping class="br.com.AgendaSFA.domain.Ananimes" />
+		
+		
+		
+		
+		
+		
+		
+		 
+		 
+		
+	</session-factory>
+
+</hibernate-configuration>

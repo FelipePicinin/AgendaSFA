@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/modeloSistema.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuPrincipal.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<f:event listener="#{MBFilmes.carregarListagem}" type="preRenderView" />
+		
+		<h:form id="frmIveListagem">
+			<p:dataTable id="tblIveListagem" widgetVar="tabelaIveListagem" value="#{MBFilmes.itens}"
+				var="item" emptyMessage="Nenhum registro encontrado. "
+				paginator="true" rows="8"
+				filteredValue="#{MBFilmes.itensFiltrados}">
+				<f:facet name="header">
+					<h:outputText value="Filmes- Listagem" />
+				</f:facet>
+
+				<p:column headerText="Código" filterBy="#{item.id_filme}"
+					sortBy="#{item.id_filme}">
+					<h:outputText value="#{item.id_filme}" />
+				</p:column>
+				
+				<p:column headerText="Generos" filterBy="#{item.generos.descricao}"
+					sortBy="#{item.generos.descricao}">
+					<h:outputText value="#{item.generos.descricao}" />
+				</p:column>
+				
+				<p:column headerText="Nome"  sortBy="#{item.nome}" filterBy="#{item.nome}">
+					<h:outputText value="#{item.nome}" />
+					</p:column>
+				
+										
+				
+				<p:column headerText="Data Lançamento" filterBy="#{item.ano_lan}"
+					sortBy="#{item.ano_lan}">
+					<h:outputText value="#{item.ano_lan}" />
+				</p:column>
+				
+					
+				
+				
+				<p:column headerText="Opções" >
+				<p:commandButton icon="ui-icon-trash" oncomplete="PF('dlgIveExcluir').show();"
+				update=":frmIveExcluir:pnlIveExcluir" >
+				<f:setPropertyActionListener target="#{MBFilmes.filmes}" value="#{item}" />
+				</p:commandButton>
+				
+				<p:commandButton icon="ui-icon-pencil" actionListener="#{MBFilmes.prepararEditar}" oncomplete="PF('dlgIveEditar').show();"
+				update=":frmIveEditar:pnlIveEditar" >
+				<f:setPropertyActionListener target="#{MBFilmes.filmes}" value="#{item}" />
+				</p:commandButton>
+				</p:column>
+				
+				<f:facet name="footer">
+				<p:commandButton value="Novo" oncomplete="PF('dlgIveNovo').show();" 
+				actionListener="#{MBFilmes.prepararNovo}"
+				update=":frmIveNovo:pnlIveNovo :msgGlobal"/>
+				</f:facet>
+				
+				
+				<f:facet name="footer">
+					<p:button value="Cad Generos" icon="ui-icon-arrowreturnthick-1-w"
+						outcome="/pages/Generos.xhtml">
+					</p:button>
+				</f:facet>
+				
+				
+			</p:dataTable>
+
+		</h:form>
+		
+		
+		<p:dialog widgetVar="dlgIveNovo" closable="false" draggable="false"
+			resizable="false" header="Filmes - Novo">
+		<h:form id="frmIveNovo">
+		<h:panelGrid id="pnlIveNovo" columns="2">
+		
+		
+		
+		<p:outputLabel value="Generos:" />
+		<p:selectOneMenu value="#{MBFilmes.filmes.generos.id_genero}" filter="true">
+		<f:selectItem itemValue="" itemLabel="Selecione um Genero"/>
+		<f:selectItems value="#{MBFilmes.comboGeneros}" var="item"
+		itemValue="#{item.id_genero}" itemLabel="#{item.descricao}" />
+		</p:selectOneMenu>
+		
+					
+				
+		<p:outputLabel for="nome" value="Nome:" />
+			<p:inputText id="nome" size="30" maxlength="80" value="#{MBFilmes.filmes.nome}" 
+			required="true" requiredMessage="O Campo nome é obrigatorio"/>	
+			
+			
+			
+			
+		
+		<p:outputLabel for="txtCliDataConsulta" value="Data Lançamento: " />
+				<p:calendar id="txtCliDataConsulta"
+				 value="#{MBFilmes.filmes.ano_lan}"
+					mask="99/99/9999" mode="popup" 
+					required="true" requiredMessage="O campo Data é obrigatório" />	
+				
+					
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2">
+		<p:commandButton value="gravar" actionListener="#{MBFilmes.novo}" 
+		update=":msgGlobal :frmIveListagem:tblIveListagem" oncomplete="PF('dlgIveNovo').hide(); " />
+		<p:commandButton value="cancelar" oncomplete="PF('dlgIveNovo').hide();"/>
+		</h:panelGrid>
+		</h:form>
+		</p:dialog>
+		
+		<p:dialog widgetVar="dlgIveExcluir" closable="false" draggable="false"
+			resizable="false" header="Filmes - Excluir">
+			
+			<h:form id="frmIveExcluir">
+		<h:panelGrid id="pnlIveExcluir" columns="2">
+		
+		<p:outputLabel value="Código:" />
+		<h:outputText value="#{MBFilmes.filmes.id_filme}" />
+		
+		
+		</h:panelGrid>
+		
+		<h:panelGrid columns="2">
+		<p:commandButton value="Excluir" actionListener="#{MBFilmes.excluir}"
+		update=":frmIveListagem:tblIveListagem  :msgGlobal"
+		oncomplete="PF('dlgIveExcluir').hide();" />
+		<p:commandButton value="Cancelar" oncomplete="PF('dlgIveExcluir').hide();" />
+		
+		</h:panelGrid>
+		
+		</h:form>
+		
+		</p:dialog>
+		
+		<p:dialog widgetVar="dlgIveEditar" closable="false" draggable="false" resizable="false"
+		header="Filmes- Editar">
+		<h:form id="frmIveEditar">
+		<h:panelGrid id="pnlIveEditar" columns="2">
+			<p:outputLabel value="Código:" />
+		<h:outputText value="#{MBFilmes.filmes.id_filme}" />
+		
+		<p:outputLabel value="Generos:" />
+		<p:selectOneMenu value="#{MBFilmes.filmes.generos.id_genero}" filter="true">
+		<f:selectItem itemValue="" itemLabel="Selecione um Genero"/>
+		<f:selectItems value="#{MBFilmes.comboGeneros}" var="item"
+		itemValue="#{item.id_genero}" itemLabel="#{item.descricao}" />
+		</p:selectOneMenu>
+		
+							
+		<p:outputLabel for="nome" value="Nome:" />
+			<p:inputText id="nome" size="30" maxlength="80" value="#{MBFilmes.filmes.nome}" 
+			required="true" requiredMessage="O Campo nome é obrigatorio"/>	
+			
+			
+		
+		<p:outputLabel for="txtCliDataConsulta" value="Data Lançamento: " />
+				<p:calendar id="txtCliDataConsulta"
+				 value="#{MBFilmes.filmes.ano_lan}"
+					mask="99/99/9999" mode="popup" 
+					required="true" requiredMessage="O campo Data é obrigatório" />	
+					
+					</h:panelGrid>
+		
+		<h:panelGrid columns="2">
+		<p:commandButton value="Editar" actionListener="#{MBFilmes.editar}" 
+		update=":frmIveListagem:tblIveListagem :msgGlobal"
+		oncomplete="PF('dlgIveEditar').hide();" />
+		
+		<p:commandButton value="Cancelar" oncomplete="PF('dlgIveEditar').hide();"/>
+		</h:panelGrid>
+		</h:form>
+		
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>
+		
